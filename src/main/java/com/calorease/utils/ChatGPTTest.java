@@ -7,11 +7,14 @@ public class ChatGPTTest {
             String prompt = "Write a Java class for a User entity with fields id, name, and email.";
             
             // Call the ChatGPTIntegration utility
-            String response = ChatGPTIntegration.sendPrompt(prompt);
+            String jsonResponse = ChatGPTIntegration.sendPrompt(prompt);
+            
+            //Extract the generated code
+            String generatedCode = ChatGPTIntegration.extractGeneratedCode(jsonResponse);
 
             // Print the response
-            System.out.println("Response from ChatGPT:");
-            System.out.println(response);
+            System.out.println("Generated Code:");
+            System.out.println(generatedCode);
         } catch (Exception e) {
             System.err.println("Error occurred while sending the prompt:");
             e.printStackTrace();
