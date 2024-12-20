@@ -3,11 +3,15 @@ package com.calorease.calorease.service;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.calorease.calorease.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
+
 import java.util.Optional;
 import java.util.List;
 import com.calorease.calorease.entity.User;
 
 @Service
+@Transactional 
 public class UserService {
     
     private final UserRepository userRepository;
@@ -18,6 +22,7 @@ public class UserService {
     }
 
     public User registerUser(User user) {
+    	System.out.println("Registering user: " + user);
         return userRepository.save(user);
     }
 
