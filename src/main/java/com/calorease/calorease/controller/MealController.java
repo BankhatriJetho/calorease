@@ -1,14 +1,18 @@
 package com.calorease.calorease.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +39,7 @@ public class MealController {
         return MealDTO.from(savedMeal);
     }
 
-    @GetMapping
+    @GetMapping("/by-user")
     public List<MealDTO> getMealsByUser(@RequestParam Integer userId) {
         return mealService.getMealsByUser(userId)
             .stream()
@@ -49,11 +53,23 @@ public class MealController {
         return ResponseEntity.ok("Meal with ID " + id + " has been deleted successfully!");
     }
     
-    //test point
-    @GetMapping("/test")
-    public String testEndpoint() {
-        return "MealController is working!";
+    @PutMapping("/{id}")
+    public ResponseEntity<MealDTO> updateMeal(@PathVariable Integer id, @RequestBody MealDTO mealDTO) {
+        Meal updatedMeal = mealService.updateMeal(id, mealDTO);
+        return ResponseEntity.ok(MealDTO.from(updatedMeal));
     }
-
+    
+    @GetMapping
+    public ResponseEntity<Page<MealDTO>> getFilteredMeals(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) Integer minCalories,
+            @RequestParam(required = false) Integer maxCalories,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        
+        Page<MealDTO> meals = mealService.getFilteredMeals(userId, minCalories, maxCalories, date, page, size);
+        return ResponseEntity.ok(meals);
+    }
 
 }
