@@ -63,7 +63,6 @@ public class User {
                 '}';
     }
     
-    //Static from() method
     public static User from(UserDTO userDTO) {
         User user = new User();
         user.setName(userDTO.getName());
