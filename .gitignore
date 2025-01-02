@@ -25,3 +25,6 @@ Thumbs.db
 
 # Ignore other files
 /node_modules/
+
+# Ignore jar files
+bfg-1.14.0.jar
