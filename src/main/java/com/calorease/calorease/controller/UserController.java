@@ -11,6 +11,7 @@ import com.calorease.calorease.service.UserService;
 
 import jakarta.validation.Valid;
 
+import com.calorease.calorease.entity.Role;
 import com.calorease.calorease.entity.User;
 import com.calorease.calorease.repository.UserRepository;
 
@@ -75,4 +76,26 @@ public class UserController{
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+    
+    @PostMapping("/promote/{userId}")
+    public ResponseEntity<String> promoteToAdmin(@PathVariable Integer userId) {
+    	System.out.println("Promote User Endpoint Hit: " + userId);
+        try {
+            userService.promoteUserToAdmin(userId);
+            return ResponseEntity.ok("User promoted to ADMIN successfully.");
+        } catch (Exception e) {
+        	System.out.println("Error during promotion: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error promoting user: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/admins")
+    public List<UserDTO> getAdmins() {
+        return userService.getUsersByRole(Role.ADMIN)
+                .stream()
+                .map(UserDTO::from)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -1,17 +1,8 @@
 package com.calorease.calorease.entity;
 
 import java.time.LocalDate;
-
 import com.calorease.calorease.dto.MealDTO;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "meals")
@@ -26,15 +17,10 @@ public class Meal {
     @Column(nullable = false)
     private Integer calories;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @Column(nullable = false)
     private LocalDate date;
-    
-  
-	//Getters and Setters
+
+	// Getters and Setters
 	public Integer getId() {
 		return id;
 	}
@@ -59,14 +45,6 @@ public class Meal {
 		this.calories = calories;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public LocalDate getDate() {
 		return date;
 	}
@@ -74,6 +52,7 @@ public class Meal {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
+
 	public static Meal from(MealDTO mealDTO) {
         Meal meal = new Meal();
         meal.setId(mealDTO.getId());
@@ -82,5 +61,4 @@ public class Meal {
         meal.setDate(mealDTO.getDate());
         return meal;
     }
-
 }

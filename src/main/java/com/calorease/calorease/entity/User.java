@@ -2,6 +2,8 @@ package com.calorease.calorease.entity;
 import com.calorease.calorease.dto.UserDTO;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -19,8 +21,22 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleEntity> roles = new HashSet<>();
+    
 
     public User() {}
+    
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public Integer getId() {
         return id;
@@ -52,6 +68,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public Set<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
     }
 
     @Override

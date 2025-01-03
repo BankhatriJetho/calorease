@@ -46,4 +46,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        if (path.startsWith("/users/promote") || path.startsWith("/auth/login")) {
+            System.out.println("Skipping JWT filter for endpoint: " + path);
+            return true;  // Skip JWT filter for promotion and login endpoints
+        }
+        return false;  // Apply filter to all other paths
+    }
+
 }

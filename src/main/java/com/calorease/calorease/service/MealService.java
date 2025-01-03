@@ -3,37 +3,26 @@ package com.calorease.calorease.service;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import com.calorease.calorease.dto.MealDTO;
 import com.calorease.calorease.entity.Meal;
-import com.calorease.calorease.entity.User;
 import com.calorease.calorease.repository.MealRepository;
-import com.calorease.calorease.repository.UserRepository;
 
 @Service
 public class MealService {
 	private final MealRepository mealRepository;
-	private final UserRepository userRepository;
 
     @Autowired
-    public MealService(MealRepository mealRepository, UserRepository userRepository) {
+    public MealService(MealRepository mealRepository) {
         this.mealRepository = mealRepository;
-        this.userRepository = userRepository;
     }
 
-    public Meal logMeal(Meal meal, Integer userId) {
-    	User user = userRepository.findById(userId)
-    			.orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-    	meal.setUser(user);
+    public Meal logMeal(Meal meal) {
         return mealRepository.save(meal);
     }
 
-    public List<Meal> getMealsByUser(Integer userId) {
-        return mealRepository.findByUserId(userId);
+    public List<Meal> getAllMeals() {
+        return mealRepository.findAll();
     }
     
     public void deleteMeal(Integer id) {
@@ -55,11 +44,15 @@ public class MealService {
     	
     }
     
-    public Page<MealDTO> getFilteredMeals(Integer userId, Integer minCalories, Integer maxCalories, LocalDate date, int page, int size) {
-    	Pageable pageable = PageRequest.of(page, size);
-    	Page<Meal> meals = mealRepository.findFilteredMeals(userId, minCalories, maxCalories, date, pageable);
+    public List<MealDTO> getFilteredMeals(Integer minCalories, Integer maxCalories, LocalDate date) {
+    	List<Meal> meals = mealRepository.findFilteredMeals(minCalories, maxCalories, date);
 
     	// Map to DTO
-    	return meals.map(MealDTO::from);
+    	return meals.stream().map(MealDTO::from).toList();
+    }
+    
+    public Integer getTotalCalories() {
+        List<Meal> meals = mealRepository.findAll();
+        return meals.stream().mapToInt(Meal::getCalories).sum();
     }
 }

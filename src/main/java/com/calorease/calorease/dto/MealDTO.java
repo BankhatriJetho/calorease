@@ -1,7 +1,6 @@
 package com.calorease.calorease.dto;
 
 import java.time.LocalDate;
-
 import com.calorease.calorease.entity.Meal;
 
 public class MealDTO {
@@ -9,20 +8,18 @@ public class MealDTO {
 	private String name;
 	private Integer calories;
 	private LocalDate date;
-	private Integer userId;
 	
 	public MealDTO() {}
-	
-	public MealDTO(Integer id, String name, Integer calories, LocalDate date,Integer userId) {
+
+	public MealDTO(Integer id, String name, Integer calories, LocalDate date) {
 		this.id = id;
 		this.name = name;
 		this.calories = calories;
 		this.date = date;
-		this.userId = userId;
 	}
 	
 	public static MealDTO from(Meal meal) {
-		return new MealDTO(meal.getId(), meal.getName(), meal.getCalories(), meal.getDate(), meal.getUser().getId());
+		return new MealDTO(meal.getId(), meal.getName(), meal.getCalories(), meal.getDate());
 	}
 
 	public Integer getId() {
@@ -39,11 +36,5 @@ public class MealDTO {
 
 	public LocalDate getDate() {
 		return date;
-	}
-	public Integer getUserId() {
-		return userId;
-	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
 	}
 }
